@@ -9,20 +9,24 @@
     <link href="static/css/all.min.css" rel="stylesheet">
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/style.css" rel="stylesheet">
+    <style>
+        .centralizado {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
 
     <div id="app" class="container">
 
-        <tabela-dinamica v-slot:default="props" hidden="#nomes" :mapa="pessoas.mapa">
-                <input type="text" id="nomes" v-model="props.json_dados"
-                    value='[{"nome":"Rogério","nascimento":"1982-04-21T00:00:00.000Z","saldo_conta":-1250},{"nome":"Kellen","nascimento":"1991-03-05T00:00:00.000Z","saldo_conta":15000}]' />
+        <tabela-dinamica v-slot="props" hidden="#nomes" :fields="pessoas.fields">
+            <input type="hidden" id="nomes" v-model="props.json_dados"
+                value='[{"nome":"Rogério","nascimento":"1982-04-21T00:00:00.000Z","saldo_conta":-1250},{"nome":"Kellen","nascimento":"1991-03-05T00:00:00.000Z","saldo_conta":15000}]' />
         </tabela-dinamica>
 
 
-        <!-- <tabela-dinamica hidden="#json-orcamentos" :mapa="dotacoes.mapa"
-            :ocultar_colunas="dotacoes.colunas_para_ocultar">
+        <!-- <tabela-dinamica hidden="#json-orcamentos" :fields="dotacoes.fields">
         </tabela-dinamica>
         <input type="text" id="json-orcamentos"
             value='[{"id":0.4316603972432953,"projeto":{"codigo":1,"nome":"Projeto 1"},"acao":{"codigo":1,"nome":"Ação 1"},"unidade":{"codigo":1,"nome":"Unidade 1"},"percentual":25.67,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":1200.78},{"id":0.4302454698152882,"projeto":{"codigo":2,"nome":"Projeto 2"},"acao":{"codigo":2,"nome":"Ação 2"},"unidade":{"codigo":2,"nome":"Unidade 2"},"percentual":1,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":0.78},{"id":0.07220304890913787,"projeto":{"codigo":1,"nome":"Projeto 1"},"acao":{"codigo":1,"nome":"Ação 1"},"unidade":{"codigo":1,"nome":"Unidade 1"},"percentual":12.6,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":45.9},{"id":0.009871303499763284,"projeto":{"codigo":3,"nome":"Projeto 3"},"acao":{"codigo":3,"nome":"Ação 3"},"unidade":{"codigo":3,"nome":"Unidade 3"},"percentual":47.67,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":65.78},{"id":0.8542127359263332,"projeto":{"codigo":1,"nome":"Projeto 1"},"acao":{"codigo":1,"nome":"Ação 1"},"unidade":{"codigo":1,"nome":"Unidade 1"},"percentual":47.67,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":1200.78}]' /> -->

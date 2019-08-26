@@ -2,15 +2,23 @@
 import Vue from '../../vue.esm.browser.js';
 import { BodyTemplate } from '../../helpers.js';
 
+
+const Define = {
+    render() {
+        return this.$scopedSlots.default(this.$attrs);
+    }
+}
+
 Vue.component('tabela-dinamica', {
     props: [
         'hidden',
-        'mapa',
+        'fields',
         'contador_linhas',
-        'botao_exclusao',
-        'exibir_colunas',
-        'ocultar_colunas'
+        'botao_exclusao'
     ],
+    components: {
+        'v-define': Define
+    },
     data: function () {
         return {
             dados: []
@@ -19,11 +27,10 @@ Vue.component('tabela-dinamica', {
     methods: {
         excluir_dado,
         header,
-        body,
+        data,
         footer
     },
     computed: {
-
         exibir_botao_exclusao,
         exibir_contador,
         json_dados,
@@ -41,8 +48,8 @@ Vue.component('tabela-dinamica', {
                 <thead class="thead-dark">
                     <tr>
                         <th v-if="exibir_contador && possui_dados">#</th>
-                        <th v-for="propriedade in propriedades">
-                            {{ header(propriedade) }}
+                        <th v-for="prop in propriedades" :class="header(prop).class || ''">
+                            <span v-html="header(prop).title"></span>
                         </th>
                         <th v-if="possui_acoes && possui_dados">
                             Ações
@@ -53,7 +60,7 @@ Vue.component('tabela-dinamica', {
                     <tr v-for="(dado, index) in dados">
                         <th v-if="exibir_contador">{{ index + 1 }}</th>
                         <td v-for="propriedade in propriedades">
-                            {{ body(dado, propriedade) }}
+                            {{ data(dado, propriedade) }}
                         </td>
                         <td v-if="possui_acoes && possui_dados">
                             <button class="btn" @click="excluir_dado" :data-index="index" v-if="exibir_botao_exclusao">
@@ -147,18 +154,11 @@ function possui_totalizadores() {
 
 function propriedades() {
 
-    const propriedades_novas = Object.keys(this.mapa).filter(key => this.possui_dados && !this.propriedades_originais.includes(key));
+    const propriedades_novas = Object.keys(this.fields).filter(key => this.possui_dados && !this.propriedades_originais.includes(key));
     let propriedades = this.propriedades_originais.concat(propriedades_novas);
 
-    if (this.exibir_colunas) {
-
-        propriedades = propriedades.filter(prop => this.exibir_colunas.includes(prop));
-    }
-
-    if (this.ocultar_colunas) {
-
-        propriedades = propriedades.filter(prop => !this.ocultar_colunas.includes(prop));
-    }
+    // Filtrando apenas as colunas visíveis.
+    propriedades = propriedades.filter(prop => this.fields[prop].visible == undefined || this.fields[prop].visible)
 
     return propriedades;
 }
@@ -170,43 +170,55 @@ function propriedades_originais() {
 
 function propriedades_totalizadas() {
 
-    return Object.keys(this.mapa).filter(prop => this.mapa[prop].totalizar);
+    return Object.keys(this.fields).filter(prop => this.fields[prop].totalize);
 }
 
 function header(prop) {
 
-    if (this.mapa) {
+    let header = {
+        title: prop
+    };
 
-        if (Object.keys(this.mapa).includes(prop)) {
+    if (this.fields) {
 
-            if (this.mapa[prop].header) {
+        if (Object.keys(this.fields).includes(prop)) {
 
-                return this.mapa[prop].header;
+            const title = this.fields[prop].title;
+            const titleClass = this.fields[prop].titleClass;
+
+            if (title) {
+
+                header.title = title;
+            }
+
+            if(titleClass){
+
+                header.class = titleClass;
             }
         }
     }
-    return prop;
+    return header;
 }
 
-function body(dado, prop) {
+function data(dado, prop) {
 
-    // Verifica se existe um mapa com informações customizadas para as propriedades.
-    if (this.mapa) {
+    // Verifica se existe um fields com informações customizadas para as propriedades.
+    if (this.fields) {
 
-        // Caso exista o mapa, verifica se a propriedade em questão possui definições nele.
-        if (Object.keys(this.mapa).includes(prop)) {
+        // Caso exista o field, verifica se a propriedade em questão possui definições nele.
+        if (Object.keys(this.fields).includes(prop)) {
 
             // Caso a propriedade tenha uma função body definida, utiliza essa função para transformar o dado.
             // A função body tem prioridade sobre a propriedade template, por isso é executada primeiro.
-            if (this.mapa[prop].body) {
+            if (this.fields[prop].data) {
 
-                return this.mapa[prop].body(dado)
+                return this.fields[prop].data(dado)
             }
 
             // Caso tenha um template definido para a propriedade, utiliza para transformar o dado.
-            if (this.mapa[prop].template) {
+            if (this.fields[prop].formatter) {
 
-                const template_name = this.mapa[prop].template;
+                const template_name = this.fields[prop].formatter;
                 return BodyTemplate[template_name](dado[prop]);
             }
         }
@@ -224,12 +236,12 @@ function footer(prop) {
     }
     else {
 
-        dado_totalizado = this.dados.reduce((total, dado) => total += this.mapa[prop].body(dado), 0.0);
+        dado_totalizado = this.dados.reduce((total, dado) => total += this.fields[prop].data(dado), 0.0);
     }
 
-    if (this.mapa[prop].template) {
+    if (this.fields[prop].formatter) {
 
-        const template_name = this.mapa[prop].template;
+        const template_name = this.fields[prop].formatter;
         return BodyTemplate[template_name](dado_totalizado);
     }
 

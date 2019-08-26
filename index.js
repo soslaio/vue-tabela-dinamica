@@ -8,61 +8,59 @@ window.app = new Vue({
     el: '#app',
     data: {
         pessoas:{
-
-            mapa: {
+            fields: {
                 nome: {
-                    header: 'Nome'
+                    title: '<i class="far fa-user"></i> Nome'
                 },
                 nascimento: {
-                    header: 'Data de Nascimento',
-                    template: 'data'
+                    title: '<i class="fas fa-baby"></i> Data de Nascimento',
+                    formatter: 'data'
                 },
                 saldo_conta: {
-                    header: 'Saldo em conta',
-                    template: 'moeda',
-                    totalizar: true
+                    title: '<i class="fas fa-dollar-sign"></i> Saldo em conta',
+                    formatter: 'moeda',
+                    totalize: true
                 },
                 dias_vivo: {
-                    header: 'Nº de dias vivo',
-                    body: data => Math.round((new Date() - new Date(data.nascimento)) / (1000 * 60 * 60 * 24)),
-                    totalizar: true
+                    title: '<i class="far fa-heart"></i> Nº de dias vivo',
+                    data: data => Math.round((new Date() - new Date(data.nascimento)) / (1000 * 60 * 60 * 24)),
+                    totalize: true
                 }
             },
         },
         dotacoes: {
-
-            mapa: {
+            fields: {
                 id: {
-                    ocultar: true
+                    visible: false
                 },
                 projeto: {
-                    header: 'Projeto',
-                    body: row => row.projeto.nome
+                    title: 'Projeto',
+                    data: row => row.projeto.nome
                 },
                 acao: {
-                    header: 'Ação',
-                    body: row => row.acao.nome
+                    title: 'Ação',
+                    data: row => row.acao.nome
                 },
                 unidade: {
-                    header: 'Unidade',
-                    body: row => row.unidade.nome
+                    title: 'Unidade',
+                    data: row => row.unidade.nome
                 },
                 percentual: {
-                    header: '%',
-                    template: 'percentual',
-                    totalizar: true
+                    title: '%',
+                    formatter: 'percentual',
+                    totalize: true
                 },
                 valor: {
-                    header: 'Valor',
-                    template: 'moeda',
-                    totalizar: true
+                    title: 'Valor',
+                    formatter: 'moeda',
+                    totalize: true
                 },
                 periodo: {
-                    header: 'Período',
-                    body: row => BodyTemplate.periodo(row.inicio_vigencia, row.fim_vigencia)
+                    title: 'Período',
+                    data: row => BodyTemplate.periodo(row.inicio_vigencia, row.fim_vigencia)
                 }
             },
-            colunas_para_ocultar: ['id', 'inicio_vigencia', 'fim_vigencia'],
+            // colunas_para_ocultar: ['id', 'inicio_vigencia', 'fim_vigencia'],
         }
     }
 });
