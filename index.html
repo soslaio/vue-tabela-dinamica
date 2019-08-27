@@ -20,16 +20,64 @@
 
     <div id="app" class="container">
 
-        <tabela-dinamica v-slot="props" hidden="#nomes" :fields="pessoas.fields">
-            <input type="hidden" id="nomes" v-model="props.json_dados"
-                value='[{"nome":"Rogério","nascimento":"1982-04-21T00:00:00.000Z","saldo_conta":-1250},{"nome":"Kellen","nascimento":"1991-03-05T00:00:00.000Z","saldo_conta":15000}]' />
-        </tabela-dinamica>
+        <h1>Formulário de cadastro</h1>
 
+        <!--
+            A responsabilidade do componente é apenas exibir dados, por isso se faz necessário que o elemento
+            pai possua o formulário. A responsabilidade de atrelar os valores de campos ao formulário para a
+            criação de objetos é do elemento pai.
+         -->
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" id="nome" class="form-control" />
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label>Data de Nascimento</label>
+                    <input type="date" id="nascimento" class="form-control" />
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label>Saldo em conta</label>
+                    <input type="number" id="saldo_conta" class="form-control" />
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <br />
+                    <button id="btAdicionar" class="btn btn-primary" @click="adicionarPessoa">Adicionar</button>
+                </div>
+            </div>
+        </div>
 
-        <!-- <tabela-dinamica hidden="#json-orcamentos" :fields="dotacoes.fields">
+        <!--
+            Utilização do componente de tabela dinâmica dentro do HTML. Os campos "ref" e "v-slot" são obrigatórios
+            e genéricos, sendo padrão em outros componentes.
+
+            - O "ref" é o identificado da instância do componente, para poder referenciar em métodos como o "adicionar".
+            - O "v-slot" permite que o elemento pai acesse as informações do componente filho.
+
+            Os outros parâmetros são específicos do componente, sendo:
+
+            - O "hidden" identifica o 
+        -->
+        <tabela-dinamica ref="tdNomes" v-slot="props" hidden="#nomes" :fields="pessoas.fields">
+
+            <!--
+                Input que persiste a tabela dinâmica. Há um slot específico dentro do componente para abrigá-lo.
+                É importante que esse input hidden fique no elemento pai, não no componente, para que o ECM possa
+                persistí-lo dentro de seu banco de dados identificando pelo seu atributo "name", que não é identificado
+                pelo ECM no caso de elementos criados dinamicamente.
+            -->
+
+            <input type="text" id="nomes" name="nomes" v-model="props.json_dados"
+                value='[{"nome":"Rogério","nascimento":"1982-04-21T03:00:00.000Z","saldo_conta":-1450}]' />
+
         </tabela-dinamica>
-        <input type="text" id="json-orcamentos"
-            value='[{"id":0.4316603972432953,"projeto":{"codigo":1,"nome":"Projeto 1"},"acao":{"codigo":1,"nome":"Ação 1"},"unidade":{"codigo":1,"nome":"Unidade 1"},"percentual":25.67,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":1200.78},{"id":0.4302454698152882,"projeto":{"codigo":2,"nome":"Projeto 2"},"acao":{"codigo":2,"nome":"Ação 2"},"unidade":{"codigo":2,"nome":"Unidade 2"},"percentual":1,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":0.78},{"id":0.07220304890913787,"projeto":{"codigo":1,"nome":"Projeto 1"},"acao":{"codigo":1,"nome":"Ação 1"},"unidade":{"codigo":1,"nome":"Unidade 1"},"percentual":12.6,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":45.9},{"id":0.009871303499763284,"projeto":{"codigo":3,"nome":"Projeto 3"},"acao":{"codigo":3,"nome":"Ação 3"},"unidade":{"codigo":3,"nome":"Unidade 3"},"percentual":47.67,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":65.78},{"id":0.8542127359263332,"projeto":{"codigo":1,"nome":"Projeto 1"},"acao":{"codigo":1,"nome":"Ação 1"},"unidade":{"codigo":1,"nome":"Unidade 1"},"percentual":47.67,"inicio_vigencia":"2019-10-01T03:00:00.000Z","fim_vigencia":"2019-10-15T03:00:00.000Z","valor":1200.78}]' /> -->
 
     </div>
 

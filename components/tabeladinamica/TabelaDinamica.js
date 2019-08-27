@@ -1,36 +1,30 @@
 
-import Vue from '../../vue.esm.browser.js';
 import { BodyTemplate } from '../../helpers.js';
 
 
-const Define = {
-    render() {
-        return this.$scopedSlots.default(this.$attrs);
-    }
-}
-
-Vue.component('tabela-dinamica', {
+export const TabelaDinamica = {
     props: [
         'hidden',
         'fields',
         'contador_linhas',
         'botao_exclusao'
     ],
-    components: {
-        'v-define': Define
-    },
     data: function () {
         return {
             dados: []
         }
     },
     methods: {
+        adicionar_dado,
         excluir_dado,
         header,
         data,
         footer
     },
     computed: {
+        slots: function(){
+            return this.$slots
+        },
         exibir_botao_exclusao,
         exibir_contador,
         json_dados,
@@ -42,6 +36,7 @@ Vue.component('tabela-dinamica', {
         propriedades_totalizadas
     },
     created,
+    mounted,
     template: `
         <div>
             <table class="table table-striped">
@@ -86,10 +81,22 @@ Vue.component('tabela-dinamica', {
             <slot v-bind:json_dados="json_dados"></slot>
         </div>
     `
-});
+};
 
+
+function adicionar_dado(dado) {
+
+    this.dados.push(dado);
+}
+
+function mounted(){
+    console.log('wtf', this.$parent);
+}
 
 function created() {
+
+    //this.$slots.default.forEach(vnode => console.log(vnode));
+    // console.log(this.$slots);
 
     // Caso o hidden tenha sido indicado.
     if (this.hidden) {
@@ -158,7 +165,7 @@ function propriedades() {
     let propriedades = this.propriedades_originais.concat(propriedades_novas);
 
     // Filtrando apenas as colunas visíveis.
-    propriedades = propriedades.filter(prop => this.fields[prop].visible == undefined || this.fields[prop].visible)
+    propriedades = propriedades.filter(prop => !this.fields[prop] || this.fields[prop].visible == undefined || this.fields[prop].visible)
 
     return propriedades;
 }
@@ -191,7 +198,7 @@ function header(prop) {
                 header.title = title;
             }
 
-            if(titleClass){
+            if (titleClass) {
 
                 header.class = titleClass;
             }
