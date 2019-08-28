@@ -1,5 +1,5 @@
 
-import { BodyTemplate } from '../../helpers.js';
+import { BodyTemplate } from './helpers.js';
 
 
 export const TabelaDinamica = {

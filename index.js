@@ -1,6 +1,6 @@
 
 import Vue from './vue.esm.browser.js';
-import { TabelaDinamica } from './components/tabeladinamica/TabelaDinamica.js';
+import { TabelaDinamica } from './TabelaDinamica.js';
 
 
 const data = {
@@ -37,7 +37,8 @@ window.app = new Vue({
     }
 });
 
-function adicionarPessoa() {
+function adicionarPessoa(event) {
+    event.preventDefault();
 
     const pessoa = criarObjetoPessoa();
 
