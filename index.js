@@ -1,6 +1,6 @@
 
 import Vue from './vue.esm.browser.js';
-import { TabelaDinamica } from './TabelaDinamica.js';
+import { TabelaDinamica } from './component-tabela-dinamica.js';
 
 
 const data = {
@@ -44,6 +44,8 @@ function adicionarPessoa(event) {
 
     // Chama o método dentro do componente filho que adiciona o objeto à lista.
     this.$refs.tdNomes.adicionar_dado(pessoa);
+
+    limparFormularioPessoa();
 }
 
 function criarObjetoPessoa(){
@@ -59,4 +61,12 @@ function criarObjetoPessoa(){
         nascimento: new Date(`${input_nascimento.value}T00:00:00`),
         saldo_conta: parseFloat(input_saldo.value)
     };
+}
+
+function limparFormularioPessoa(){
+
+    // Captura os dados contidos no formulário.
+    document.querySelector('#nome').value = '';
+    document.querySelector('#nascimento').value = '';
+    document.querySelector('#saldo_conta').value = '';
 }

@@ -6,15 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Componente de tabela</title>
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="fontawesome.5.10.2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap.min.css">
     <link href="style.css" rel="stylesheet">
-    <style>
-        .centralizado {
-            text-align: center;
-        }
-    </style>
 </head>
 
 <body>
@@ -25,11 +19,6 @@
 
             <h1>Formul�rio de cadastro</h1>
 
-            <!--
-            A responsabilidade do componente é apenas exibir dados, por isso se faz necessário que o elemento
-            pai possua o formulário. A responsabilidade de atrelar os valores de campos ao formulário para a
-            criação de objetos é do elemento pai.
-         -->
             <div class="row">
                 <div class="col-4">
                     <div class="form-group">
@@ -57,28 +46,9 @@
                 </div>
             </div>
 
-            <!--
-            Utilização do componente de tabela dinâmica dentro do HTML. Os campos "ref" e "v-slot" são obrigatórios
-            e genéricos, sendo padrão em outros componentes.
-
-            - O "ref" é o identificado da instância do componente, para poder referenciar em métodos como o "adicionar".
-            - O "v-slot" permite que o elemento pai acesse as informações do componente filho.
-
-            Os outros parâmetros são específicos do componente, sendo:
-
-            - O "hidden" identifica o 
-        -->
             <tabela-dinamica ref="tdNomes" v-slot="props" hidden="#nomes" :fields="pessoas.fields">
-
-                <!--
-                Input que persiste a tabela dinâmica. Há um slot específico dentro do componente para abrigá-lo.
-                É importante que esse input hidden fique no elemento pai, não no componente, para que o ECM possa
-                persistí-lo dentro de seu banco de dados identificando pelo seu atributo "name", que não é identificado
-                pelo ECM no caso de elementos criados dinamicamente.
-            -->
-
-                <input type="text" id="nomes" name="nomes" v-model="props.json_dados" />
-
+                <input type="text" id="nomes" name="nomes" v-model="props.json_dados"
+                    value='[{"nome":"Kellen","nascimento":"1991-03-05T03:00:00.000Z","saldo_conta":13450}]' />
             </tabela-dinamica>
 
         </form>

@@ -2,6 +2,51 @@
 import { BodyTemplate } from './helpers.js';
 
 
+const template = `
+    <div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th v-if="exibir_contador && possui_dados">#</th>
+                    <th v-for="prop in propriedades" :class="header(prop).class || ''">
+                        <span v-html="header(prop).title"></span>
+                    </th>
+                    <th v-if="possui_acoes && possui_dados">
+                        Ações
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(dado, index) in dados">
+                    <th v-if="exibir_contador">{{ index + 1 }}</th>
+                    <td v-for="propriedade in propriedades">
+                        {{ data(dado, propriedade) }}
+                    </td>
+                    <td v-if="possui_acoes && possui_dados">
+                        <button class="btn" @click="excluir_dado" :data-index="index" v-if="exibir_botao_exclusao">
+                            <i class="far fa-trash-alt" :data-index="index"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot v-if="possui_totalizadores">
+                <tr>
+                    <td v-if="exibir_contador"></td>
+                    <template v-for="propriedade in propriedades">
+                        <td v-if="propriedades_totalizadas.includes(propriedade)">
+                            {{ footer(propriedade) }}
+                        </td>
+                        <td v-if="!propriedades_totalizadas.includes(propriedade)">
+                        </td>
+                    </template>
+                    <td v-if="possui_acoes && possui_dados"></td>
+                </tr>
+            </tfoot>
+        </table>
+        <slot v-bind:json_dados="json_dados"></slot>
+    </div>
+`
+
 export const TabelaDinamica = {
     props: [
         'hidden',
@@ -37,50 +82,7 @@ export const TabelaDinamica = {
     },
     created,
     mounted,
-    template: `
-        <div>
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th v-if="exibir_contador && possui_dados">#</th>
-                        <th v-for="prop in propriedades" :class="header(prop).class || ''">
-                            <span v-html="header(prop).title"></span>
-                        </th>
-                        <th v-if="possui_acoes && possui_dados">
-                            Ações
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(dado, index) in dados">
-                        <th v-if="exibir_contador">{{ index + 1 }}</th>
-                        <td v-for="propriedade in propriedades">
-                            {{ data(dado, propriedade) }}
-                        </td>
-                        <td v-if="possui_acoes && possui_dados">
-                            <button class="btn" @click="excluir_dado" :data-index="index" v-if="exibir_botao_exclusao">
-                                <i class="far fa-trash-alt" :data-index="index"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot v-if="possui_totalizadores">
-                    <tr>
-                        <td v-if="exibir_contador"></td>
-                        <template v-for="propriedade in propriedades">
-                            <td v-if="propriedades_totalizadas.includes(propriedade)">
-                                {{ footer(propriedade) }}
-                            </td>
-                            <td v-if="!propriedades_totalizadas.includes(propriedade)">
-                            </td>
-                        </template>
-                        <td v-if="possui_acoes && possui_dados"></td>
-                    </tr>
-                </tfoot>
-            </table>
-            <slot v-bind:json_dados="json_dados"></slot>
-        </div>
-    `
+    template
 };
 
 
